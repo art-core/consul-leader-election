@@ -1,0 +1,4 @@
+*.iml
+.idea
+consul-leader-election
+vendor

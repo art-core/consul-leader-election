@@ -1,0 +1,18 @@
+hash: 6d4448b9407cf59ba3ed679f53258c7eff506e4e42785678efae5ee5c24f53c3
+updated: 2017-09-04T11:22:38.305750874+02:00
+imports:
+- name: github.com/hashicorp/consul
+  version: 75ca2cace08e38de8af1731ee8614d0533d5a4d4
+  subpackages:
+  - api
+- name: github.com/hashicorp/go-cleanhttp
+  version: 3573b8b52aa7b37b9358d966a898feb387f62437
+- name: github.com/hashicorp/go-rootcerts
+  version: 6bb64b370b90e7ef1fa532be9e591a81c3493e00
+- name: github.com/hashicorp/serf
+  version: 555c6fa2a11d1f8e08ac9964015e864a3f61e7c3
+  subpackages:
+  - coordinate
+- name: github.com/mitchellh/go-homedir
+  version: b8bc1bf767474819792c23f32d8286a45736f1c6
+testImports: []

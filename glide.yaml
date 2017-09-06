@@ -1,0 +1,6 @@
+package: github.com/wywy/consul-leader-election
+import:
+- package: github.com/hashicorp/consul
+  version: ^0.8.3
+  subpackages:
+  - api
