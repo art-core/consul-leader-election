@@ -23,7 +23,7 @@ Exits with `2` if the local node is not able to acquire the session and not owne
 
 `-key-value`
 
-  Value of they key (`-key`). (Default: consul node name)
+  Value of the key (`-key`). (Default: consul node name)
 
 `-session-name`
 
