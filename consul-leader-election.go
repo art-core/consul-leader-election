@@ -23,6 +23,10 @@ func init() {
 	if key == "" {
 		log.Fatal("argument -key is not set")
 	}
+
+	if sessionName != "" {
+		sessionName = key
+	}
 }
 
 func main() {
@@ -35,15 +39,8 @@ func main() {
 	sessionChecks = append(sessionChecks, "serfHealth")
 	sessionChecks = append(sessionChecks, healthChecks...)
 
-	var sessionEntryName string
-	if sessionName != "" {
-		sessionEntryName = sessionName
-	} else {
-		sessionEntryName = key
-	}
-
 	session := &consul.SessionEntry{
-		Name: sessionEntryName,
+		Name: sessionName,
 		Checks: sessionChecks,
 		LockDelay: (time.Duration(1) * time.Second),
 	}
