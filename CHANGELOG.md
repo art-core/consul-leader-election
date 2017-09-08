@@ -1,5 +1,10 @@
 # Consul Leader Election CHANGELOG
 
+## 0.2.1
+
+##### Fixed:
+  * acquire session if key exists but has no session
+
 ## 0.2.0
 
 ##### Added:
