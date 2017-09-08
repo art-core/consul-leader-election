@@ -12,11 +12,6 @@ Exits with `2` if the local node is not able to acquire the session and not owne
 
 ## Arguments
 
-	flag.StringVar(&key, "key", "", "-key leader")
-	flag.StringVar(&keyValue, "key-value", "", "-key-value value (Default: consul node name)")
-	flag.StringVar(&sessionName, "session-name", "", "-session-name sessionName (Default: -name)")
-	flag.Var(&healthChecks, "health-check", "-health-check service:serviceName (serfHealth is set by default)")
-
 `-key`
 
   Name of the key, which will be used to do leader election. All nodes that are participating should agree on a given key to coordinate.
@@ -32,6 +27,15 @@ Exits with `2` if the local node is not able to acquire the session and not owne
 `-health-check`
 
   Health checks, which will be used for the session. (`serfHealth` is set by default)
+
+`-leader-exit-code`
+  Overwrite exit code if leader. (Default: 0)
+
+`-not-leader-exit-code`
+  Overwrite exit code if not leader. (Default: 1)
+
+`-error-exit-code`
+  Overwrite exit code for errors. (Default: 2)
 
 ## License
 
