@@ -1,5 +1,10 @@
 # Consul Leader Election CHANGELOG
 
+## 0.2.2
+
+##### Fixed:
+  * check if key exists before checking key session
+
 ## 0.2.1
 
 ##### Fixed:
