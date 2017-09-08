@@ -40,6 +40,34 @@ func main() {
 		os.Exit(errorExitCode)
 	}
 
+	localNodeName, err := client.Agent().NodeName()
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(errorExitCode)
+	}
+
+	kv, _, err := client.KV().Get(key, &consul.QueryOptions{})
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(errorExitCode)
+	}
+
+	if kv != nil {
+		sessionInfo, _, err := client.Session().Info(kv.Session, &consul.QueryOptions{})
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(errorExitCode)
+		}
+
+		if sessionInfo.Node == localNodeName {
+			fmt.Println("I am the current leader.")
+			os.Exit(leaderExitCode)
+		} else {
+			fmt.Println(fmt.Sprintf("%s is the current leader.", sessionInfo.Node))
+			os.Exit(notLeaderExitCode)
+		}
+	}
+
 	var sessionChecks []string
 	sessionChecks = append(sessionChecks, "serfHealth")
 	sessionChecks = append(sessionChecks, healthChecks...)
@@ -51,12 +79,6 @@ func main() {
 	}
 
 	sessionID, _, err := client.Session().Create(session, &consul.WriteOptions{})
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(errorExitCode)
-	}
-
-	localNodeName, err := client.Agent().NodeName()
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(errorExitCode)
@@ -87,25 +109,4 @@ func main() {
 	} else {
 		client.Session().Destroy(sessionID, &consul.WriteOptions{})
 	}
-
-	kv, _, err := client.KV().Get(key, &consul.QueryOptions{})
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(errorExitCode)
-	}
-
-	sessionInfo, _, err := client.Session().Info(kv.Session, &consul.QueryOptions{})
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(errorExitCode)
-	}
-
-	if sessionInfo.Node == localNodeName {
-		fmt.Println("I am the current leader.")
-		os.Exit(leaderExitCode)
-	} else {
-		fmt.Println(fmt.Sprintf("%s is the current leader.", sessionInfo.Node))
-		os.Exit(notLeaderExitCode)
-	}
-
 }
