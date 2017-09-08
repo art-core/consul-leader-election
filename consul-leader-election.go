@@ -52,7 +52,7 @@ func main() {
 		os.Exit(errorExitCode)
 	}
 
-	if kv.Session != "" {
+	if (kv != nil && kv.Session != "") {
 		sessionInfo, _, err := client.Session().Info(kv.Session, &consul.QueryOptions{})
 		if err != nil {
 			fmt.Println(err.Error())
