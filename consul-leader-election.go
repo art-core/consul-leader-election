@@ -10,6 +10,7 @@ import (
 )
 
 var key, keyValue, sessionName string
+var leaderExitCode, notLeaderExitCode, errorExitCode int
 var healthChecks StringSliceFlag
 
 func init() {
@@ -17,6 +18,9 @@ func init() {
 	flag.StringVar(&key, "key", "", "-key leader")
 	flag.StringVar(&keyValue, "key-value", "", "-key-value value (Default: consul node name)")
 	flag.StringVar(&sessionName, "session-name", "", "-session-name sessionName (Default: -key)")
+	flag.IntVar(&leaderExitCode, "leader-exit-code", 0, "-leader-exit-code 0")
+	flag.IntVar(&notLeaderExitCode, "not-leader-exit-code", 1, "-not-leader-exit-code 1")
+	flag.IntVar(&errorExitCode, "error-exit-code", 2, "-error-exit-code 2")
 	flag.Var(&healthChecks, "health-check", "-health-check service:serviceName (serfHealth is set by default)")
 	flag.Parse()
 
@@ -32,7 +36,8 @@ func init() {
 func main() {
 	client, err := consul.NewClient(consul.DefaultConfig())
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
+		os.Exit(errorExitCode)
 	}
 
 	var sessionChecks []string
@@ -47,12 +52,14 @@ func main() {
 
 	sessionID, _, err := client.Session().Create(session, &consul.WriteOptions{})
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
+		os.Exit(errorExitCode)
 	}
 
 	localNodeName, err := client.Agent().NodeName()
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
+		os.Exit(errorExitCode)
 	}
 
 	var value string
@@ -70,32 +77,35 @@ func main() {
 
 	success, _, err := client.KV().Acquire(kvPair, &consul.WriteOptions{})
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
+		os.Exit(errorExitCode)
 	}
 
 	if success {
 		fmt.Println("I'm the current leader.")
-		os.Exit(0) // PASSING
+		os.Exit(leaderExitCode)
 	} else {
 		client.Session().Destroy(sessionID, &consul.WriteOptions{})
 	}
 
 	kv, _, err := client.KV().Get(key, &consul.QueryOptions{})
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
+		os.Exit(errorExitCode)
 	}
 
 	sessionInfo, _, err := client.Session().Info(kv.Session, &consul.QueryOptions{})
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
+		os.Exit(errorExitCode)
 	}
 
 	if sessionInfo.Node == localNodeName {
 		fmt.Println("I am the current leader.")
-		os.Exit(0) // PASSING
+		os.Exit(leaderExitCode)
 	} else {
 		fmt.Println(fmt.Sprintf("%s is the current leader.", sessionInfo.Node))
-		os.Exit(2) // CRITICAL
+		os.Exit(notLeaderExitCode)
 	}
 
 }
