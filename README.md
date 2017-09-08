@@ -7,8 +7,13 @@ Application to support [consul leader election](https://www.consul.io/docs/guide
 
 ## Details
 
-Acquires a consul session for a given key. Exits `0` if the local node successfully acquired the session or owns the session for the given key. 
-Exits with `2` if the local node is not able to acquire the session and not owner of the session for the given key. 
+Acquires a consul session for a given key.
+
+Exits with `0` if the local node successfully acquired the session or owns the session for the given key.
+
+Exits with `1` if the local node is not able to acquire the session and not owner of the session for the given key.
+
+Exits with `2` on error.
 
 ## Arguments
 
