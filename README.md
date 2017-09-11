@@ -34,12 +34,15 @@ Exits with `2` on error.
   Health checks, which will be used for the session. (`serfHealth` is set by default)
 
 `-leader-exit-code`
+
   Overwrite exit code if leader. (Default: 0)
 
 `-not-leader-exit-code`
+
   Overwrite exit code if not leader. (Default: 1)
 
 `-error-exit-code`
+
   Overwrite exit code for errors. (Default: 2)
 
 ## License
