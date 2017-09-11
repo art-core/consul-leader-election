@@ -34,31 +34,37 @@ func init() {
 }
 
 func main() {
+	// create a new client
 	client, err := consul.NewClient(consul.DefaultConfig())
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(errorExitCode)
 	}
 
+	// get the local agents node name
 	localNodeName, err := client.Agent().NodeName()
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(errorExitCode)
 	}
 
+	// try to get the key value pair, for the given key
 	kv, _, err := client.KV().Get(key, &consul.QueryOptions{})
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(errorExitCode)
 	}
 
+	// if the key exists and has a session
 	if (kv != nil && kv.Session != "") {
+		// get keys session info
 		sessionInfo, _, err := client.Session().Info(kv.Session, &consul.QueryOptions{})
 		if err != nil {
 			fmt.Println(err.Error())
 			os.Exit(errorExitCode)
 		}
 
+		// if the session belongs to the local agent, he is the leader
 		if sessionInfo.Node == localNodeName {
 			fmt.Println("I am the current leader.")
 			os.Exit(leaderExitCode)
@@ -68,6 +74,7 @@ func main() {
 		}
 	}
 
+	// define session
 	var sessionChecks []string
 	sessionChecks = append(sessionChecks, "serfHealth")
 	sessionChecks = append(sessionChecks, healthChecks...)
@@ -78,12 +85,14 @@ func main() {
 		LockDelay: (time.Duration(1) * time.Second),
 	}
 
+	// create session
 	sessionID, _, err := client.Session().Create(session, &consul.WriteOptions{})
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(errorExitCode)
 	}
 
+	// set value of the key
 	var value string
 	if keyValue != "" {
 		value = keyValue
@@ -91,18 +100,21 @@ func main() {
 		value = localNodeName
 	}
 
+	// define key value pair
 	kvPair := &consul.KVPair{
 		Key: key,
 		Value: []byte(value),
 		Session: sessionID,
 	}
 
+	// try to acquire the key, with the created session
 	success, _, err := client.KV().Acquire(kvPair, &consul.WriteOptions{})
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(errorExitCode)
 	}
 
+	// if successful, the local agent is the leader
 	if success {
 		fmt.Println("I'm the current leader.")
 		os.Exit(leaderExitCode)
