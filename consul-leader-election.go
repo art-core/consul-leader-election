@@ -37,21 +37,21 @@ func main() {
 	// create a new client
 	client, err := consul.NewClient(consul.DefaultConfig())
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		os.Exit(errorExitCode)
 	}
 
 	// get the local agents node name
 	localNodeName, err := client.Agent().NodeName()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		os.Exit(errorExitCode)
 	}
 
 	// try to get the key value pair, for the given key
 	kv, _, err := client.KV().Get(key, &consul.QueryOptions{})
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		os.Exit(errorExitCode)
 	}
 
@@ -60,16 +60,16 @@ func main() {
 		// get keys session info
 		sessionInfo, _, err := client.Session().Info(kv.Session, &consul.QueryOptions{})
 		if err != nil {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 			os.Exit(errorExitCode)
 		}
 
 		// if the session belongs to the local agent, he is the leader
 		if sessionInfo.Node == localNodeName {
-			fmt.Println("I am the current leader.")
+			log.Println("I am the current leader.")
 			os.Exit(leaderExitCode)
 		} else {
-			fmt.Println(fmt.Sprintf("%s is the current leader.", sessionInfo.Node))
+			log.Println(fmt.Sprintf("%s is the current leader.", sessionInfo.Node))
 			os.Exit(notLeaderExitCode)
 		}
 	}
@@ -88,7 +88,7 @@ func main() {
 	// create session
 	sessionID, _, err := client.Session().Create(session, &consul.WriteOptions{})
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		os.Exit(errorExitCode)
 	}
 
@@ -110,13 +110,13 @@ func main() {
 	// try to acquire the key, with the created session
 	success, _, err := client.KV().Acquire(kvPair, &consul.WriteOptions{})
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		os.Exit(errorExitCode)
 	}
 
 	// if successful, the local agent is the leader
 	if success {
-		fmt.Println("I'm the current leader.")
+		log.Println("I'm the current leader.")
 		os.Exit(leaderExitCode)
 	} else {
 		client.Session().Destroy(sessionID, &consul.WriteOptions{})
