@@ -45,6 +45,18 @@ Exits with `2` on error.
 
   Overwrite exit code for errors. (Default: 2)
 
+`-service-name`
+
+  Name of the service you want to tag.
+
+`-leader-tag`
+
+  Tag which will be set to `-service-name` if leader.
+
+`-not-leader-tag`
+
+  Tag which will be set to `-service-name` if not leader.
+
 ## License
 
 Copyright 2017 ATVAG GmbH
