@@ -15,6 +15,8 @@ Exits with `1` if the local node is not able to acquire the session and not owne
 
 Exits with `2` on error.
 
+With `-leader-tag` and `-not-leader-tag` you can tag a service based on the leader election outcome.
+
 ## Arguments
 
 `-key`
