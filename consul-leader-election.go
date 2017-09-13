@@ -142,22 +142,18 @@ func main() {
 
 // defines what to do if leader
 func leaderAction(client *consul.Client) {
-	if leaderTag != "" {
-		if err := updateTag(client, serviceName, leaderTag); err != nil {
-			log.Println(err.Error())
-			os.Exit(errorExitCode)
-		}
+	if err := updateTag(client, serviceName, leaderTag); err != nil {
+		log.Println(err.Error())
+		os.Exit(errorExitCode)
 	}
 	os.Exit(leaderExitCode)
 }
 
 // defines what to do if not leader
 func notLeaderAction(client *consul.Client) {
-	if notLeaderTag != "" {
-		if err := updateTag(client, serviceName, notLeaderTag); err != nil {
-			log.Println(err.Error())
-			os.Exit(errorExitCode)
-		}
+	if err := updateTag(client, serviceName, notLeaderTag); err != nil {
+		log.Println(err.Error())
+		os.Exit(errorExitCode)
 	}
 	os.Exit(notLeaderExitCode)
 }
@@ -180,10 +176,17 @@ func updateTag(client *consul.Client, serviceName, tag string) error {
 		return nil
 	}
 
+	var tags []string
+	if tag != "" {
+		tags = append(cleanupTagSlice(service.Tags), tag)
+	} else {
+		tags = cleanupTagSlice(service.Tags)
+	}
+
 	serviceRegistration := &consul.AgentServiceRegistration{
 		ID:                service.ID,
 		Name:              service.Service,
-		Tags:              append(cleanupTagSlice(service.Tags), tag),
+		Tags:              tags,
 		Port:              service.Port,
 		Address:           service.Address,
 		EnableTagOverride: service.EnableTagOverride,
