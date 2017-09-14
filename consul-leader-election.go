@@ -142,18 +142,22 @@ func main() {
 
 // defines what to do if leader
 func leaderAction(client *consul.Client) {
-	if err := updateTag(client, serviceName, leaderTag); err != nil {
-		log.Println(err.Error())
-		os.Exit(errorExitCode)
+	if serviceName != "" {
+		if err := updateTag(client, serviceName, leaderTag); err != nil {
+			log.Println(err.Error())
+			os.Exit(errorExitCode)
+		}
 	}
 	os.Exit(leaderExitCode)
 }
 
 // defines what to do if not leader
 func notLeaderAction(client *consul.Client) {
-	if err := updateTag(client, serviceName, notLeaderTag); err != nil {
-		log.Println(err.Error())
-		os.Exit(errorExitCode)
+	if serviceName != "" {
+		if err := updateTag(client, serviceName, notLeaderTag); err != nil {
+			log.Println(err.Error())
+			os.Exit(errorExitCode)
+		}
 	}
 	os.Exit(notLeaderExitCode)
 }
