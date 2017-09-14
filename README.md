@@ -15,6 +15,8 @@ Exits with `1` if the local node is not able to acquire the session and not owne
 
 Exits with `2` on error.
 
+With `-leader-tag` and `-not-leader-tag` you can tag a service based on the leader election outcome.
+
 ## Arguments
 
 `-key`
@@ -28,6 +30,10 @@ Exits with `2` on error.
 `-session-name`
 
   Name of the session, which will be used to acquire the key (`-key`). (Default: `-key`)
+
+`-session-lock-delay`
+
+  The session's lock-delay time in seconds. (Default: 1)
 
 `-health-check`
 
@@ -44,6 +50,18 @@ Exits with `2` on error.
 `-error-exit-code`
 
   Overwrite exit code for errors. (Default: 2)
+
+`-service-name`
+
+  Name of the service you want to tag.
+
+`-leader-tag`
+
+  Tag which will be set to `-service-name` if leader.
+
+`-not-leader-tag`
+
+  Tag which will be set to `-service-name` if not leader.
 
 ## License
 
