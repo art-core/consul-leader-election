@@ -1,5 +1,16 @@
 # Consul Leader Election CHANGELOG
 
+## 0.3.0
+
+##### Fixed:
+  * if acquiring the session is not successful, exit with `-not-leader-exit-code` instead of `0`.
+
+##### Added:
+  * `-service-name`: Name of the service you want to tag.
+  * `-leader-tag`: Tag which will be set to `-service-name` if leader.
+  * `-not-leader-tag`: Tag which will be set to `-service-name` if not leader.
+  * `-session-lock-delay`: The session's lock-delay time in seconds. (Default: 1)
+
 ## 0.2.2
 
 ##### Fixed:
