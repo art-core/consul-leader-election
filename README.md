@@ -31,6 +31,10 @@ With `-leader-tag` and `-not-leader-tag` you can tag a service based on the lead
 
   Name of the session, which will be used to acquire the key (`-key`). (Default: `-key`)
 
+`-session-lock-delay`
+
+  The session's lock-delay time in seconds. (Default: 1)
+
 `-health-check`
 
   Health checks, which will be used for the session. (`serfHealth` is set by default)

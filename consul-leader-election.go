@@ -10,7 +10,7 @@ import (
 )
 
 var key, keyValue, sessionName, serviceName, leaderTag, notLeaderTag string
-var leaderExitCode, notLeaderExitCode, errorExitCode int
+var leaderExitCode, notLeaderExitCode, errorExitCode, sessionLockDelay int
 var healthChecks StringSliceFlag
 
 func init() {
@@ -18,6 +18,7 @@ func init() {
 	flag.StringVar(&key, "key", "", "-key leader")
 	flag.StringVar(&keyValue, "key-value", "", "-key-value value (Default: consul node name)")
 	flag.StringVar(&sessionName, "session-name", "", "-session-name sessionName (Default: -key)")
+	flag.IntVar(&sessionLockDelay, "session-lock-delay", 1, "-session-lock-delay 10 (in seconds)")
 	flag.IntVar(&leaderExitCode, "leader-exit-code", 0, "-leader-exit-code 0")
 	flag.IntVar(&notLeaderExitCode, "not-leader-exit-code", 1, "-not-leader-exit-code 1")
 	flag.IntVar(&errorExitCode, "error-exit-code", 2, "-error-exit-code 2")
@@ -97,7 +98,7 @@ func main() {
 	session := &consul.SessionEntry{
 		Name:      sessionName,
 		Checks:    sessionChecks,
-		LockDelay: (time.Duration(1) * time.Second),
+		LockDelay: (time.Duration(sessionLockDelay) * time.Second),
 	}
 
 	// create session
