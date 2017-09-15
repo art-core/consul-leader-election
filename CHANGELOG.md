@@ -1,5 +1,10 @@
 # Consul Leader Election CHANGELOG
 
+## 0.3.1
+
+##### Changed:
+  * use README argument description for flag usage strings
+
 ## 0.3.0
 
 ##### Fixed:
