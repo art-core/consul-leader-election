@@ -16,8 +16,8 @@ var healthChecks StringSliceFlag
 func init() {
 	healthChecks = StringSliceFlag{}
 	flag.StringVar(&key, "key", "",
-		"Name of the key, which will be used to do leader election. " +
-		"All nodes that are participating should agree on a given key to coordinate.")
+		"Name of the key, which will be used to do leader election. "+
+			"All nodes that are participating should agree on a given key to coordinate.")
 	flag.StringVar(&keyValue, "key-value", "",
 		"Value of the key (-key). (Default: consul node name)")
 	flag.StringVar(&sessionName, "session-name", "",
@@ -31,8 +31,8 @@ func init() {
 	flag.IntVar(&errorExitCode, "error-exit-code", 2,
 		"Overwrite exit code for errors.")
 	flag.Var(&healthChecks, "health-check",
-		"Health checks (`string`), which will be used for the session. Can be used more than once." +
-		"('serfHealth' is set by default)")
+		"Health checks (`string`), which will be used for the session. Can be used more than once."+
+			"('serfHealth' is set by default)")
 	flag.StringVar(&serviceName, "service-name", "",
 		"Name of the service you want to tag.")
 	flag.StringVar(&leaderTag, "leader-tag", "",
