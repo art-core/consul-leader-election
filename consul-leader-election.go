@@ -15,17 +15,30 @@ var healthChecks StringSliceFlag
 
 func init() {
 	healthChecks = StringSliceFlag{}
-	flag.StringVar(&key, "key", "", "-key leader")
-	flag.StringVar(&keyValue, "key-value", "", "-key-value value (Default: consul node name)")
-	flag.StringVar(&sessionName, "session-name", "", "-session-name sessionName (Default: -key)")
-	flag.IntVar(&sessionLockDelay, "session-lock-delay", 1, "-session-lock-delay 10 (in seconds)")
-	flag.IntVar(&leaderExitCode, "leader-exit-code", 0, "-leader-exit-code 0")
-	flag.IntVar(&notLeaderExitCode, "not-leader-exit-code", 1, "-not-leader-exit-code 1")
-	flag.IntVar(&errorExitCode, "error-exit-code", 2, "-error-exit-code 2")
-	flag.Var(&healthChecks, "health-check", "-health-check service:serviceName (serfHealth is set by default)")
-	flag.StringVar(&serviceName, "service-name", "", "-service-name serviceName")
-	flag.StringVar(&leaderTag, "leader-tag", "", "-leader-tag master")
-	flag.StringVar(&notLeaderTag, "not-leader-tag", "", "-not-leader-tag slave")
+	flag.StringVar(&key, "key", "",
+		"Name of the key, which will be used to do leader election. " +
+		"All nodes that are participating should agree on a given key to coordinate.")
+	flag.StringVar(&keyValue, "key-value", "",
+		"Value of the key (-key). (Default: consul node name)")
+	flag.StringVar(&sessionName, "session-name", "",
+		"Name of the session, which will be used to acquire the key ('-key'). (Default: '-key')")
+	flag.IntVar(&sessionLockDelay, "session-lock-delay", 1,
+		"The session's lock-delay time in seconds.")
+	flag.IntVar(&leaderExitCode, "leader-exit-code", 0,
+		"Overwrite exit code if leader.")
+	flag.IntVar(&notLeaderExitCode, "not-leader-exit-code", 1,
+		"Overwrite exit code if not leader.")
+	flag.IntVar(&errorExitCode, "error-exit-code", 2,
+		"Overwrite exit code for errors.")
+	flag.Var(&healthChecks, "health-check",
+		"Health checks (`string`), which will be used for the session. Can be used more than once." +
+		"('serfHealth' is set by default)")
+	flag.StringVar(&serviceName, "service-name", "",
+		"Name of the service you want to tag.")
+	flag.StringVar(&leaderTag, "leader-tag", "",
+		"Tag which will be set to -service-name if leader.")
+	flag.StringVar(&notLeaderTag, "not-leader-tag", "",
+		"Tag which will be set to '-service-name' if not leader.")
 	flag.Parse()
 
 	if key == "" {

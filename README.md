@@ -37,7 +37,7 @@ With `-leader-tag` and `-not-leader-tag` you can tag a service based on the lead
 
 `-health-check`
 
-  Health checks, which will be used for the session. (`serfHealth` is set by default)
+  Health checks, which will be used for the session. Can be used more than once. (`serfHealth` is set by default)
 
 `-leader-exit-code`
 
